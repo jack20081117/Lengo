@@ -44,7 +44,7 @@ def g2color(g):
 
 
 @jit(nopython=True)
-def step(x): return (x+np.abs(x))/(2*x+0.001)  #阶跃函数
+def step(x): return (x+np.abs(x))/(2*x+0.0001)  #阶跃函数
 
 
 @jit(nopython=True)
@@ -53,8 +53,8 @@ def relu(x): return np.maximum(x,0)
 
 @jit(nopython=True)
 def fri(x):  #友好函数
-    #return 0.5*x-0.5*np.abs(x)+1
-    return np.exp(-5*relu(-x))
+    #return np.exp(-5*relu(-x))
+    return 0.5*x-0.5*np.abs(x)+1
 
 
 def laplacian(x):
@@ -65,7 +65,7 @@ def laplacian(x):
     '''
     l=np.array([[1,2,1],
                 [2,-12,2],
-                [1,2,1]])
+                [1,2,1]])*(1/12)
     return convolve2d(x,l,mode='same',boundary='wrap')
 
 
@@ -81,6 +81,8 @@ def transform(f,g):
     #     f=f*g/np.abs(f)
     #f=f*g
     f=f*(1-(1-g)**3)
+    if np.isnan(f):
+        print(f,g)
     return f,g
 
 
